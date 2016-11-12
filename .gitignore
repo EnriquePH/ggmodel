@@ -1,0 +1,5 @@
+# ggmodel .gitignore
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
