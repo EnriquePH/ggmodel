@@ -1,6 +1,5 @@
 #  ----------------------------------------------------------------------------
 #  GGPLOT FOR PREDICTION MODELS
-#  RF Forecasting
 #  File: ggmodel.R
 #  (c) 2016 - Enrique Pérez Herrero
 #  Apache License Version 2.0, January 2004
