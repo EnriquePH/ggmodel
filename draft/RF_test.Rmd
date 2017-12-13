@@ -1,0 +1,123 @@
+---
+title: "Random Forest ggmodel test"
+author: "Enrique Pérez Herrero"
+date: "December 13, 2017"
+output: html_document
+---
+
+## Loading packages
+
+```{r, message=FALSE}
+library(randomForest)
+library(caret)
+library(ggplot2)
+```
+
+## Loading iris data
+
+```{r}
+data(iris)
+head(iris)
+```
+
+## Parameters
+
+```{r}
+SAMPLE_SIZE <- 0.4
+VERBOSE <- FALSE
+IMPORTANCE <- TRUE
+TREES <-250
+METRIC <- "Accuracy"
+MTRY <- 2:4
+```
+
+## Training and testing sets
+
+```{r}
+ 
+set.seed(pi)
+in_train <- createDataPartition(y = iris$Species,
+                               p = SAMPLE_SIZE,
+                               list = FALSE)
+
+train_iris <- iris[in_train, ]
+test_iris <- iris[-in_train, ]
+```
+
+# Tuning Random Forest model with `caret`
+
+```{r}
+# Training Preprocess
+prP <- c("range")
+
+# Training Control
+trC <- trainControl(method = "cv",
+                    number = 2,
+                    verboseIter = VERBOSE)
+
+# Tuning Grid
+tnG <- expand.grid(mtry = MTRY)
+```
+
+```{r}
+model <- train(
+  y = train_iris$Species,
+  x = subset(train_iris, select = -c(Species)),
+  method = "rf",
+  ntree = TREES,
+  preProcess = prP,
+  trControl = trC,
+  tuneGrid = tnG,
+  do.trace = VERBOSE,
+  metric = METRIC,
+  maximize = TRUE,
+  importance = IMPORTANCE
+)
+```
+
+```{r}
+# 6) MODEL RESULTS
+
+model$modelInfo$label
+model$modelType
+model$preProcess
+model$bestTune
+model$results
+```
+
+```{r}
+ggplot(data  = model$results) +
+  geom_line(aes(x = mtry, y = Accuracy, color = "Accuracy")) +
+  geom_line(aes(x = mtry, y = Kappa, color = "Kappa")) +
+  ggtitle("Model Accuracy (Cross-Validation)") +
+  theme(legend.title = element_blank())
+```
+
+```{r}
+summary(model)
+```
+
+```{r}
+model$err.rate
+```
+
+```{r}
+# 7) MODEL RESULTS ON TESTING DATA
+
+# 7.1) Predictions
+
+predictions <- predict(model, subset(test_iris, select = -c(Species)))
+
+
+# 7.2) Confusion Matrix
+
+conf_matrix <- confusionMatrix(predictions, test_iris$Species)
+conf_matrix
+```
+
+```{r}
+class(conf_matrix)
+```
+
+
+

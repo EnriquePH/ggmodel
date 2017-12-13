@@ -1,4 +1,6 @@
-# ggmodel
+![License](https://img.shields.io/:license-mit-blue.svg)
+
+# ggmodel: A package to `ggplot2` Machine Learning models.
 
 
 Convenience functions to plot prediction models

@@ -1,7 +1,3 @@
-# ggmodel .gitignore
 .Rproj.user
 .Rhistory
 .RData
-.Ruserdata
-12-ggmodel.Rproj
-Readme.html

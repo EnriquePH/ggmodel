@@ -13,13 +13,6 @@ suppressMessages(require(scales))
 require(ggplot2)
 require(reshape2)
 
-col2hex <- function(cname)
-{
-    colMat <- col2rgb(cname)
-    rgb(red   = colMat[1,] / 255,
-        green = colMat[2,] / 255,
-        blue  = colMat[3,] / 255)
-}
 
 # PLOT RF MODEL ERROR AND OOB
 ggplotModelRF <- function(model,...) {
@@ -27,10 +20,10 @@ ggplotModelRF <- function(model,...) {
     model.data <-
         cbind("Tree" = as.numeric(row.names(model.data)), model.data)
     model.data <-
-        melt(model.data, id.vars = "Tree", value.name = "Error")
+        reshape2::melt(model.data, id.vars = "Tree", value.name = "Error")
     num.colors <- ncol(model$err.rate) - 1
-    color.values <- c(rainbow(num.colors), col2hex("black"))
-    
+    color.values <- c(grDevices::rainbow(num.colors), gplots::col2hex("black"))
+
     p <- ggplot() +
         ggtitle("Random Forest Model Error") +
         geom_line(data = model.data[model.data$variable != "OOB",],
