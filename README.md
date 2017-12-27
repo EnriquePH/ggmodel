@@ -5,7 +5,7 @@
 ggmodel
 =======
 
-A package to `ggplot2` Machine Learning models.
+R package to `ggplot2` Machine Learning models.
 
 Installation
 ------------

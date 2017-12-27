@@ -9,15 +9,19 @@ output: html_document
 
 ```{r, message=FALSE}
 library(randomForest)
-library(caret)
 library(ggplot2)
+library(caret)
+library(knitr)
+library(magrittr)
 ```
 
 ## Loading iris data
 
 ```{r}
 data(iris)
-head(iris)
+iris %>%
+  head %>%
+  kable
 ```
 
 ## Parameters
@@ -117,6 +121,11 @@ conf_matrix
 
 ```{r}
 class(conf_matrix)
+```
+
+```{r}
+library(ggmodel)
+ggplotConfusionMatrix(conf_matrix)
 ```
 
 

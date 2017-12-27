@@ -10,11 +10,8 @@ ggplotConfusionMatrix(m)
 \item{m}{An object of class confusionMatrix}
 }
 \value{
-a plot
+A plot
 }
 \description{
 Plot confusion matrix with metrics
-}
-\examples{
-
 }
