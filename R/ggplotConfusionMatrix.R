@@ -5,7 +5,7 @@
 #  (c) 2017 - Enrique Pérez Herrero
 #  email: eph.project1500@gmail.com
 #  The MIT License (MIT)
-#  ---------------------------------------------------------------------------
+#  ----------------------------------------------------------------------------
 
 
 #' Plot confusion matrix with metrics

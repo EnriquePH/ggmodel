@@ -1,7 +1,7 @@
 Package: ggmodel
 Title: A package to ggplot2 Machine Learning models
-Version: 0.0.0.9000
-Date: 2017-13-12
+Version: 0.0.0.9001
+Date: 2018-25-01
 Authors@R: person("Enrique", "Pérez Herrero",
     email = "eph.project1500@gmail.com",
     role = c("aut", "cre", "cph"))
@@ -13,4 +13,6 @@ LazyData: true
 RoxygenNote: 6.0.1
 Imports: 
    ggplot2,
-   caret
+   caret,
+   gplots,
+   reshape2
