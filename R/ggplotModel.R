@@ -34,7 +34,7 @@ ggplotModel.randomForest <- function(model, ...) {
   model_data <- as.data.frame(model$err.rate)
   model_data <-
     cbind("Tree" = as.numeric(row.names(model_data)), model_data)
-  model.data <- reshape2::melt(model.data,
+  model.data <- reshape2::melt(model_data,
                                id.vars = "Tree",
                                value.name = "Error")
   num_colors <- ncol(model$err.rate) - 1
