@@ -7,14 +7,16 @@
 #  The MIT License (MIT)
 #  ----------------------------------------------------------------------------
 
-
 #' Plot model error and OOB
 #'
-#' @param model An object of class `randomForest`
+#' @param model An object of class \code{randomForest}
 #' @param ... Optional parameters to be passed
 #'
-#' @return A `ggplot2` graphic object
-
+#' @importFrom reshape2 melt
+#' @importFrom grDevices rainbow
+#' @importFrom ggplot2 ggplot ggtitle aes geom_line
+#' @importFrom ggplot2 scale_color_manual ylab theme_minimal
+#' @return A \code{ggplot2} graphic object
 #'
 #' @examples
 #' \dontrun{
@@ -34,12 +36,12 @@ ggplotModel.randomForest <- function(model, ...) {
   model_data <- as.data.frame(model$err.rate)
   model_data <-
     cbind("Tree" = as.numeric(row.names(model_data)), model_data)
-  model.data <- reshape2::melt(model_data,
+  model_data <- reshape2::melt(model_data,
                                id.vars = "Tree",
                                value.name = "Error")
   num_colors <- ncol(model$err.rate) - 1
-  color_values <- c(grDevices::rainbow(num_colors),
-                    gplots::col2hex("black"))
+  black <- "#000000"
+  color_values <- c(grDevices::rainbow(num_colors), black)
 
   ggplot2::ggplot() +
     ggplot2::ggtitle("Random Forest Model Error") +

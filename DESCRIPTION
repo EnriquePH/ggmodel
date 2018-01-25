@@ -14,5 +14,5 @@ RoxygenNote: 6.0.1
 Imports: 
    ggplot2,
    caret,
-   gplots,
-   reshape2
+   reshape2,
+   grDevices

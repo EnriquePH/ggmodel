@@ -7,12 +7,12 @@
 ggplotModel(model, ...)
 }
 \arguments{
-\item{model}{An object of class `randomForest`}
+\item{model}{An object of class \code{randomForest}}
 
 \item{...}{Optional parameters to be passed}
 }
 \value{
-A `ggplot2` graphic object
+A \code{ggplot2} graphic object
 }
 \description{
 Plot model error and OOB
