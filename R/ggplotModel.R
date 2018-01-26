@@ -24,7 +24,7 @@
 #' }
 #' @export
 ggplotModel <- function(model, ...) {
-  UseMethod("randomForest")
+  UseMethod("ggplotModel")
 }
 
 #' @method ggplotModel randomForest
