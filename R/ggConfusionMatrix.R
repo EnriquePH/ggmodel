@@ -1,18 +1,17 @@
 #  ----------------------------------------------------------------------------
 #  ggmodel PACKAGE
 #  ggplot2 Machine Learning models
-#  File: ggplotConfusionMatrix.R
+#  File: ggConfusionMatrix.R
 #  (c) 2017 - Enrique Pérez Herrero
 #  email: eph.project1500@gmail.com
 #  The MIT License (MIT)
 #  ----------------------------------------------------------------------------
 
-
 #' Plot confusion matrix with metrics
 #'
 #' @param m An object of class confusionMatrix
 #'
-#' @return A plot
+#' @return A \code{ggplot2} graphic object
 #' @importFrom caret confusionMatrix
 #' @importFrom ggplot2 ggplot
 #' @importFrom ggplot2 aes
@@ -23,7 +22,7 @@
 #' @importFrom ggplot2 ggtitle
 #'
 #' @export
-ggplotConfusionMatrix <- function(m) {
+ggConfusionMatrix <- function(m) {
   Prediction <- NULL
   Reference <- NULL
   Freq <- NULL

@@ -20,6 +20,7 @@
 #'
 #' @examples
 #' \dontrun{
+#' # model is a randomForest model
 #' ggplotModel(model$finalModel)
 #' }
 #' @export
@@ -40,6 +41,7 @@ ggplotModel.randomForest <- function(model, ...) {
                                id.vars = "Tree",
                                value.name = "Error")
   num_colors <- ncol(model$err.rate) - 1
+  # OOB color
   black <- "#000000"
   color_values <- c(grDevices::rainbow(num_colors), black)
 

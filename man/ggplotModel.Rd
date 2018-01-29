@@ -19,6 +19,7 @@ Plot model error and OOB
 }
 \examples{
 \dontrun{
+# model is a randomForest model
 ggplotModel(model$finalModel)
 }
 }

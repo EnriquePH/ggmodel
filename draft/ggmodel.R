@@ -53,23 +53,35 @@ ggGiniAccPlot <- function(model, names_lim = 100) {
 
 
 # PLOT RF MeanDecreaseGini
-ggMeanDecreaseGiniPlot <- function(model, num = 25) {
+#' Title
+#'
+#' @param model
+#' @param num
+#'
+#' @return
+#' @export
+#'
+#' @examples
+ggMeanDecreaseGini <- function(model, num = 25) {
+  if(model$param$importance) {
     df <- as.data.frame(model$importance)
-    df <- cbind("Variable" = as.factor(row.names(df)), df)
-    df <-
-        head(df[with(df, order(-MeanDecreaseGini, Variable)),], num)
-    p <-
-        ggplot(data = df, aes(
-            x = reorder(Variable, MeanDecreaseGini),
-            y = MeanDecreaseGini,
-            fill = reorder(Variable, MeanDecreaseGini)
-        )) +
-        coord_flip() +
-        xlab("") +
-        guides(fill = FALSE) +
-        geom_bar(stat = "identity", width = .90) +
-        theme_minimal()
-    return(p)
+  df <- cbind("Variable" = as.factor(row.names(df)), df)
+  df <-
+    head(df[with(df, order(-MeanDecreaseGini, Variable)), ], num)
+  p <- ggplot(data = df, aes(
+    x = reorder(Variable, MeanDecreaseGini),
+    y = MeanDecreaseGini,
+    fill = reorder(Variable, MeanDecreaseGini))) +
+    coord_flip() +
+    xlab("") +
+    ylab("Mean Decrease Gini") +
+    guides(fill = FALSE) +
+    geom_bar(stat = "identity", width = .90) +
+    theme_minimal()
+  return(p)
+  } else {
+    warning("Model importance is set to FALSE")
+  }
 }
 
 
