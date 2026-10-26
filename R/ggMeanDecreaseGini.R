@@ -9,53 +9,28 @@
 
 #' ggplot Mean Decrease Gini
 #'
-#' @param model An object of class \code{randomForest}
-#' @param num An integer with the numbers of features to plot
-#' @param ... Other arguments
+#' Bar chart of the features of a random forest ordered by their mean
+#' decrease in Gini index.
 #'
-#' @return A \code{ggplot2} graphic object with feature mean Gini in
-#'  decrease order, or a warning if model \code{importance} is set
-#'  to \code{FALSE}
-#' @importFrom ggplot2 ggplot
-#' @importFrom ggplot2 aes
-#' @importFrom ggplot2 geom_bar
-#' @importFrom ggplot2 xlab ylab guides
-#' @importFrom ggplot2 coord_flip
-#' @importFrom ggplot2 theme_minimal
-#' @importFrom ggplot2 ggtitle
-#' @importFrom stats reorder
-#' @importFrom utils head
-#' @examples
-#' \dontrun{
-#' # model is a randomForest model
-#' ggMeanDecreaseGini(model$finalModel)
-#' }
+#' @param model An object of class `randomForest` for classification
+#'   (for example `train(...)$finalModel` from 'caret').
+#' @param num An integer with the numbers of features to plot.
+#' @param ... Other arguments, currently unused.
+#'
+#' @return A `ggplot2` graphic object with feature mean Gini in
+#'  decreasing order.
+#' @examplesIf requireNamespace("randomForest", quietly = TRUE)
+#' set.seed(1)
+#' model <- randomForest::randomForest(Species ~ ., data = iris, ntree = 50)
+#' ggMeanDecreaseGini(model)
 #' @export
 ggMeanDecreaseGini <- function(model, num, ...) {
   UseMethod("ggMeanDecreaseGini")
 }
 
-#' @method ggMeanDecreaseGini randomForest
+#' @rdname ggMeanDecreaseGini
 #' @export
 ggMeanDecreaseGini.randomForest <- function(model, num = 25, ...) {
-  Variable <- NULL
-  MeanDecreaseGini <- NULL
-  if (model$param$importance) {
-    df <- as.data.frame(model$importance)
-    df <- cbind("Variable" = as.factor(row.names(df)), df)
-    df <- utils::head(df[with(df, order(-MeanDecreaseGini, Variable)),], num)
-    p <- ggplot2::ggplot(data = df, aes(
-      x = stats::reorder(Variable, MeanDecreaseGini),
-      y = MeanDecreaseGini,
-      fill = stats::reorder(Variable, MeanDecreaseGini))) +
-      ggplot2::coord_flip() +
-      ggplot2::xlab("") +
-      ggplot2::ylab("Mean Decrease Gini") +
-      ggplot2::guides(fill = FALSE) +
-      ggplot2::geom_bar(stat = "identity", width = .90) +
-      ggplot2::theme_minimal()
-    return(p)
-  } else {
-    warning("Model importance is set to FALSE")
-  }
+  df <- importance_data(model, "MeanDecreaseGini", num)
+  importance_plot(df, "Mean Decrease Gini")
 }

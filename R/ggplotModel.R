@@ -9,41 +9,49 @@
 
 #' Plot model error and OOB
 #'
-#' @param model An object of class \code{randomForest}
-#' @param ... Optional parameters to be passed
+#' Line chart of the error rate of each class and the out-of-bag (OOB)
+#' error, in black, against the number of trees.
 #'
-#' @importFrom reshape2 melt
+#' @param model An object of class `randomForest` for classification.
+#' @param ... Optional parameters, currently unused.
+#'
 #' @importFrom grDevices rainbow
 #' @importFrom ggplot2 ggplot ggtitle aes geom_line
 #' @importFrom ggplot2 scale_color_manual ylab theme_minimal
-#' @return A \code{ggplot2} graphic object
+#' @return A `ggplot2` graphic object.
 #'
-#' @examples
-#' \dontrun{
-#' # model is a randomForest model
-#' ggplotModel(model$finalModel)
-#' }
+#' @examplesIf requireNamespace("randomForest", quietly = TRUE)
+#' set.seed(1)
+#' model <- randomForest::randomForest(Species ~ ., data = iris, ntree = 50)
+#' ggplotModel(model)
 #' @export
 ggplotModel <- function(model, ...) {
   UseMethod("ggplotModel")
 }
 
-#' @method ggplotModel randomForest
+#' @rdname ggplotModel
 #' @export
 ggplotModel.randomForest <- function(model, ...) {
   Tree <- NULL
   Error <- NULL
   variable <- NULL
-  model_data <- as.data.frame(model$err.rate)
-  model_data <-
-    cbind("Tree" = as.numeric(row.names(model_data)), model_data)
-  model_data <- reshape2::melt(model_data,
-                               id.vars = "Tree",
-                               value.name = "Error")
-  num_colors <- ncol(model$err.rate) - 1
+  err <- model$err.rate
+  if (is.null(err)) {
+    stop("The model has no error rate: only classification ",
+         "random forests are supported.", call. = FALSE)
+  }
+  model_data <- data.frame(
+    Tree = rep(seq_len(nrow(err)), ncol(err)),
+    variable = factor(rep(colnames(err), each = nrow(err)),
+                      levels = colnames(err)),
+    Error = as.vector(err)
+  )
+  classes <- setdiff(colnames(err), "OOB")
   # OOB color
   black <- "#000000"
-  color_values <- c(grDevices::rainbow(num_colors), black)
+  color_values <- c(stats::setNames(grDevices::rainbow(length(classes)),
+                                    classes),
+                    OOB = black)
 
   ggplot2::ggplot() +
     ggplot2::ggtitle("Random Forest Model Error") +
@@ -52,7 +60,7 @@ ggplotModel.randomForest <- function(model, ...) {
     ggplot2::geom_line(
       data = model_data[model_data$variable == "OOB", ],
       ggplot2::aes(x = Tree, y = Error, colour = variable),
-      size  = 1) +
+      linewidth = 1) +
     ggplot2::scale_color_manual(values = color_values) +
     ggplot2::ylab("") +
     ggplot2::theme_minimal()

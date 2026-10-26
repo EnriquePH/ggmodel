@@ -2,28 +2,35 @@
 % Please edit documentation in R/ggMeanDecreaseAccuracy.R
 \name{ggMeanDecreaseAccuracy}
 \alias{ggMeanDecreaseAccuracy}
+\alias{ggMeanDecreaseAccuracy.randomForest}
 \title{ggplot Mean Decrease Accuracy}
 \usage{
 ggMeanDecreaseAccuracy(model, num, ...)
+
+\method{ggMeanDecreaseAccuracy}{randomForest}(model, num = 25, ...)
 }
 \arguments{
-\item{model}{An object of class \code{randomForest}}
+\item{model}{An object of class \code{randomForest}, fitted with
+\code{importance = TRUE} (for example \code{train(...)$finalModel} from 'caret').}
 
-\item{num}{An integer with the numbers of features to plot}
+\item{num}{An integer with the numbers of features to plot.}
 
-\item{...}{Other arguments}
+\item{...}{Other arguments, currently unused.}
 }
 \value{
 A \code{ggplot2} graphic object with feature accuracy in
- decrease order, or a warning if model \code{importance} is set
- to \code{FALSE}
+decreasing order. It is an error if the model was fitted without
+\code{importance = TRUE}.
 }
 \description{
-ggplot Mean Decrease Accuracy
+Bar chart of the features of a random forest ordered by their mean
+decrease in accuracy.
 }
 \examples{
-\dontrun{
-# model is a randomForest model
-ggMeanDecreaseAccuracy(model$finalModel)
-}
+\dontshow{if (requireNamespace("randomForest", quietly = TRUE)) withAutoprint(\{ # examplesIf}
+set.seed(1)
+model <- randomForest::randomForest(Species ~ ., data = iris,
+                                    ntree = 50, importance = TRUE)
+ggMeanDecreaseAccuracy(model)
+\dontshow{\}) # examplesIf}
 }

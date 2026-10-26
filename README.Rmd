@@ -8,7 +8,10 @@ output: github_document
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  fig.path = "README-"
+  fig.path = "man/figures/README-",
+  fig.width = 7,
+  fig.height = 4,
+  dpi = 96
 )
 ```
 
@@ -16,26 +19,39 @@ knitr::opts_chunk$set(
 
 # ggmodel
 
-R package to `ggplot2` Machine Learning models.
+R package to `ggplot2` Machine Learning models: error rate and variable
+importance of `randomForest` models, and `caret` confusion matrices.
 
 ## Installation
 
-You can install `ggmodel` from [github](https://github.com/) with:
+You can install the development version of `ggmodel` from
+[GitHub](https://github.com/EnriquePH/ggmodel) with:
 
 ```{r gh-installation, eval = FALSE}
-# install.packages("devtools")
-devtools::install_github("EnriquePH/ggmodel")
+# install.packages("pak")
+pak::pak("EnriquePH/ggmodel")
 ```
 
 ## Example
 
-This is a basic example which shows you how to solve a common problem:
+```{r example, message = FALSE}
+library(ggmodel)
 
-```{r example}
-## basic example code
+set.seed(1)
+model <- randomForest::randomForest(Species ~ ., data = iris,
+                                    ntree = 200, importance = TRUE)
+
+ggplotModel(model)
+ggMeanDecreaseAccuracy(model)
+ggMeanDecreaseGini(model)
+
+m <- caret::confusionMatrix(predict(model), iris$Species)
+ggConfusionMatrix(m)
 ```
 
+Models trained with `caret::train(method = "rf")` work too: pass their
+`finalModel`.
 
 ## Links
 
-[Package ‘caret’](https://cran.r-project.org/web/packages/caret/caret.pdf)
+[Package ‘caret’](https://CRAN.R-project.org/package=caret)

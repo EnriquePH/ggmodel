@@ -7,11 +7,21 @@
 ggConfusionMatrix(m)
 }
 \arguments{
-\item{m}{An object of class confusionMatrix}
+\item{m}{An object of class \code{confusionMatrix}, as returned by
+\code{\link[caret:confusionMatrix]{caret::confusionMatrix()}}.}
 }
 \value{
-A \code{ggplot2} graphic object
+A \code{ggplot2} graphic object.
 }
 \description{
-Plot confusion matrix with metrics
+Draws the confusion matrix as a heat map, with the counts in each cell
+and the accuracy and kappa in the title.
+}
+\examples{
+\dontshow{if (requireNamespace("caret", quietly = TRUE) && requireNamespace("randomForest", quietly = TRUE)) withAutoprint(\{ # examplesIf}
+set.seed(1)
+model <- randomForest::randomForest(Species ~ ., data = iris, ntree = 50)
+m <- caret::confusionMatrix(stats::predict(model), iris$Species)
+ggConfusionMatrix(m)
+\dontshow{\}) # examplesIf}
 }

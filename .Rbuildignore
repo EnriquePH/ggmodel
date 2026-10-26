@@ -2,4 +2,9 @@
 ^\.Rproj\.user$
 ^README\.Rmd$
 ^README-.*\.png$
+^man/figures$
 ^draft$
+^LICENSE\.md$
+^cran-comments\.md$
+^\.Rhistory$
+^\.claude$

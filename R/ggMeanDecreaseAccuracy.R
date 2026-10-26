@@ -7,60 +7,32 @@
 #  The MIT License (MIT)
 #  ----------------------------------------------------------------------------
 
-# PLOT RF MeanDecreaseAccuracy
-# Only works if importance = TRUE
-
 #' ggplot Mean Decrease Accuracy
 #'
-#' @param model An object of class \code{randomForest}
-#' @param num An integer with the numbers of features to plot
-#' @param ... Other arguments
+#' Bar chart of the features of a random forest ordered by their mean
+#' decrease in accuracy.
 #'
-#' @return A \code{ggplot2} graphic object with feature accuracy in
-#'  decrease order, or a warning if model \code{importance} is set
-#'  to \code{FALSE}
-#' @importFrom ggplot2 ggplot
-#' @importFrom ggplot2 aes
-#' @importFrom ggplot2 geom_bar
-#' @importFrom ggplot2 xlab ylab guides
-#' @importFrom ggplot2 coord_flip
-#' @importFrom ggplot2 theme_minimal
-#' @importFrom ggplot2 ggtitle
-#' @importFrom stats reorder
-#' @importFrom utils head
-#' @examples
-#' \dontrun{
-#' # model is a randomForest model
-#' ggMeanDecreaseAccuracy(model$finalModel)
-#' }
+#' @param model An object of class `randomForest`, fitted with
+#'   `importance = TRUE` (for example `train(...)$finalModel` from 'caret').
+#' @param num An integer with the numbers of features to plot.
+#' @param ... Other arguments, currently unused.
+#'
+#' @return A `ggplot2` graphic object with feature accuracy in
+#'  decreasing order. It is an error if the model was fitted without
+#'  `importance = TRUE`.
+#' @examplesIf requireNamespace("randomForest", quietly = TRUE)
+#' set.seed(1)
+#' model <- randomForest::randomForest(Species ~ ., data = iris,
+#'                                     ntree = 50, importance = TRUE)
+#' ggMeanDecreaseAccuracy(model)
 #' @export
 ggMeanDecreaseAccuracy <- function(model, num, ...) {
   UseMethod("ggMeanDecreaseAccuracy")
 }
 
-#' @method ggMeanDecreaseAccuracy randomForest
+#' @rdname ggMeanDecreaseAccuracy
 #' @export
 ggMeanDecreaseAccuracy.randomForest <- function(model, num = 25, ...) {
-  Variable <- NULL
-  MeanDecreaseAccuracy <- NULL
-  if (model$param$importance) {
-    df <- as.data.frame(model$importance)
-    df <- cbind("Variable" = as.factor(row.names(df)), df)
-    df <-
-      head(df[with(df, order(-MeanDecreaseAccuracy, Variable)), ], num)
-    p <- ggplot2::ggplot(data = df,
-                aes(
-                  x = stats::reorder(Variable, MeanDecreaseAccuracy),
-                  y = MeanDecreaseAccuracy,
-                  fill = stats::reorder(Variable, MeanDecreaseAccuracy)
-                )) +
-      ggplot2::coord_flip() +
-      ggplot2::xlab("") +
-      ggplot2::guides(fill = FALSE) +
-      ggplot2::geom_bar(stat = "identity", width = .90) +
-      ggplot2::theme_minimal()
-    return(p)
-  } else {
-    warning("Model importance is set to FALSE")
-  }
+  df <- importance_data(model, "MeanDecreaseAccuracy", num)
+  importance_plot(df, "Mean Decrease Accuracy")
 }

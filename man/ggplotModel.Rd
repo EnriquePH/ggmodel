@@ -2,24 +2,29 @@
 % Please edit documentation in R/ggplotModel.R
 \name{ggplotModel}
 \alias{ggplotModel}
+\alias{ggplotModel.randomForest}
 \title{Plot model error and OOB}
 \usage{
 ggplotModel(model, ...)
+
+\method{ggplotModel}{randomForest}(model, ...)
 }
 \arguments{
-\item{model}{An object of class \code{randomForest}}
+\item{model}{An object of class \code{randomForest} for classification.}
 
-\item{...}{Optional parameters to be passed}
+\item{...}{Optional parameters, currently unused.}
 }
 \value{
-A \code{ggplot2} graphic object
+A \code{ggplot2} graphic object.
 }
 \description{
-Plot model error and OOB
+Line chart of the error rate of each class and the out-of-bag (OOB)
+error, in black, against the number of trees.
 }
 \examples{
-\dontrun{
-# model is a randomForest model
-ggplotModel(model$finalModel)
-}
+\dontshow{if (requireNamespace("randomForest", quietly = TRUE)) withAutoprint(\{ # examplesIf}
+set.seed(1)
+model <- randomForest::randomForest(Species ~ ., data = iris, ntree = 50)
+ggplotModel(model)
+\dontshow{\}) # examplesIf}
 }
