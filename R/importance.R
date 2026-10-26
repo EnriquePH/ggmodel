@@ -12,7 +12,13 @@
 # Returns the `num` most important features of a randomForest model,
 # ordered by `measure`. Stops if the model has no such importance column
 # (MeanDecreaseAccuracy needs randomForest(..., importance = TRUE)).
+# Features with non-finite importance are dropped; if `num` is larger
+# than the number of features, all of them are returned.
 importance_data <- function(model, measure, num) {
+  if (!is.numeric(num) || length(num) != 1 || is.na(num) || num < 1 ||
+      num != round(num)) {
+    stop("`num` must be a single positive whole number.", call. = FALSE)
+  }
   imp <- model$importance
   if (is.null(imp) || !measure %in% colnames(imp)) {
     stop("The model has no '", measure, "' importance. ",
@@ -22,7 +28,19 @@ importance_data <- function(model, measure, num) {
   df <- data.frame(Variable = as.factor(row.names(imp)),
                    Value = imp[, measure],
                    row.names = NULL)
+  df <- df[is.finite(df$Value), ]
+  if (nrow(df) == 0) {
+    stop("The model has no finite '", measure, "' values.", call. = FALSE)
+  }
   utils::head(df[order(-df$Value, df$Variable), ], num)
+}
+
+# Clear error for objects without a method, instead of
+# "no applicable method for ..."
+not_random_forest <- function(model) {
+  stop("`model` must be a 'randomForest' object, not '",
+       class(model)[1], "'. For 'caret' models use `model$finalModel`.",
+       call. = FALSE)
 }
 
 #' @importFrom ggplot2 ggplot aes geom_bar xlab ylab guides

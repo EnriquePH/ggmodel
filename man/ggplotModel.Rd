@@ -3,11 +3,14 @@
 \name{ggplotModel}
 \alias{ggplotModel}
 \alias{ggplotModel.randomForest}
+\alias{ggplotModel.default}
 \title{Plot model error and OOB}
 \usage{
 ggplotModel(model, ...)
 
 \method{ggplotModel}{randomForest}(model, ...)
+
+\method{ggplotModel}{default}(model, ...)
 }
 \arguments{
 \item{model}{An object of class \code{randomForest} for classification.}

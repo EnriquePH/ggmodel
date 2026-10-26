@@ -10,7 +10,8 @@
 #' Plot confusion matrix with metrics
 #'
 #' Draws the confusion matrix as a heat map, with the counts in each cell
-#' and the accuracy and kappa in the title.
+#' and the accuracy (as a percentage) and Cohen's kappa (a coefficient
+#' without units) in the title.
 #'
 #' @param m An object of class `confusionMatrix`, as returned by
 #'   [caret::confusionMatrix()].
@@ -37,8 +38,8 @@ ggConfusionMatrix <- function(m) {
   Reference <- NULL
   Freq <- NULL
   df <- data.frame(m$table)
-  mytitle <- paste("Accuracy", round(100 * m$overall[["Accuracy"]], 2), "% ",
-                   "Kappa", round(100 * m$overall[["Kappa"]], 2), "%")
+  mytitle <- sprintf("Accuracy %.2f %%   Kappa %.3f",
+                     100 * m$overall[["Accuracy"]], m$overall[["Kappa"]])
 
   ggplot2::ggplot(data = df, ggplot2::aes(x = Reference, y = Prediction)) +
     ggplot2::geom_tile(ggplot2::aes(fill = log1p(Freq)), colour = "white") +

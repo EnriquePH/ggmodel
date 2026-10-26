@@ -12,9 +12,16 @@
 #' Bar chart of the features of a random forest ordered by their mean
 #' decrease in Gini index.
 #'
+#' The mean decrease in Gini index is the total decrease in node impurity
+#' from splits on a feature, averaged over all trees. It tends to favour
+#' features with many possible split points, and it is not the same measure
+#' as the mean decrease in accuracy ([ggMeanDecreaseAccuracy()]). Neither
+#' of them is a measure of causal effect.
+#'
 #' @param model An object of class `randomForest` for classification
 #'   (for example `train(...)$finalModel` from 'caret').
-#' @param num An integer with the numbers of features to plot.
+#' @param num A positive whole number: how many of the most important
+#'   features to plot. If the model has fewer, all of them are plotted.
 #' @param ... Other arguments, currently unused.
 #'
 #' @return A `ggplot2` graphic object with feature mean Gini in
@@ -33,4 +40,10 @@ ggMeanDecreaseGini <- function(model, num, ...) {
 ggMeanDecreaseGini.randomForest <- function(model, num = 25, ...) {
   df <- importance_data(model, "MeanDecreaseGini", num)
   importance_plot(df, "Mean Decrease Gini")
+}
+
+#' @rdname ggMeanDecreaseGini
+#' @export
+ggMeanDecreaseGini.default <- function(model, num = 25, ...) {
+  not_random_forest(model)
 }

@@ -3,17 +3,21 @@
 \name{ggMeanDecreaseGini}
 \alias{ggMeanDecreaseGini}
 \alias{ggMeanDecreaseGini.randomForest}
+\alias{ggMeanDecreaseGini.default}
 \title{ggplot Mean Decrease Gini}
 \usage{
 ggMeanDecreaseGini(model, num, ...)
 
 \method{ggMeanDecreaseGini}{randomForest}(model, num = 25, ...)
+
+\method{ggMeanDecreaseGini}{default}(model, num = 25, ...)
 }
 \arguments{
 \item{model}{An object of class \code{randomForest} for classification
 (for example \code{train(...)$finalModel} from 'caret').}
 
-\item{num}{An integer with the numbers of features to plot.}
+\item{num}{A positive whole number: how many of the most important
+features to plot. If the model has fewer, all of them are plotted.}
 
 \item{...}{Other arguments, currently unused.}
 }
@@ -24,6 +28,13 @@ decreasing order.
 \description{
 Bar chart of the features of a random forest ordered by their mean
 decrease in Gini index.
+}
+\details{
+The mean decrease in Gini index is the total decrease in node impurity
+from splits on a feature, averaged over all trees. It tends to favour
+features with many possible split points, and it is not the same measure
+as the mean decrease in accuracy (\code{\link[=ggMeanDecreaseAccuracy]{ggMeanDecreaseAccuracy()}}). Neither
+of them is a measure of causal effect.
 }
 \examples{
 \dontshow{if (requireNamespace("randomForest", quietly = TRUE)) withAutoprint(\{ # examplesIf}

@@ -45,3 +45,48 @@ test_that("ggConfusionMatrix plots a caret confusion matrix", {
   expect_match(p$labels$title, "^Accuracy")
   expect_error(ggConfusionMatrix(table(1:3, 1:3)), "confusionMatrix")
 })
+
+test_that("ggConfusionMatrix shows kappa as a coefficient, not a percentage", {
+  skip_if_not_installed("caret")
+  m <- caret::confusionMatrix(stats::predict(rf), iris$Species)
+  title <- ggConfusionMatrix(m)$labels$title
+  expect_match(title, sprintf("Kappa %.3f$", m$overall[["Kappa"]]))
+  expect_false(grepl("Kappa.*%", title))
+})
+
+test_that("ggConfusionMatrix handles empty cells", {
+  skip_if_not_installed("caret")
+  lv <- c("a", "b", "c")
+  pred <- factor(c("a", "a", "b", "b"), levels = lv)
+  ref <- factor(c("a", "a", "b", "c"), levels = lv)
+  p <- ggConfusionMatrix(caret::confusionMatrix(pred, ref))
+  fills <- ggplot2::ggplot_build(p)$data[[1]]$fill
+  expect_false(anyNA(fills))
+})
+
+test_that("num is validated", {
+  for (bad in list(0, -1, 2.5, NA, "3", c(1, 2))) {
+    expect_error(ggMeanDecreaseGini(rf, num = bad), "`num`")
+  }
+})
+
+test_that("num larger than the number of features plots all of them", {
+  p <- ggMeanDecreaseGini(rf, num = 100)
+  expect_equal(nrow(p$data), nrow(rf$importance))
+})
+
+test_that("non-finite importance values are dropped", {
+  rf_na <- rf
+  rf_na$importance[1, "MeanDecreaseGini"] <- NA
+  p <- ggMeanDecreaseGini(rf_na)
+  expect_equal(nrow(p$data), nrow(rf$importance) - 1)
+  rf_na$importance[, "MeanDecreaseGini"] <- NaN
+  expect_error(ggMeanDecreaseGini(rf_na), "no finite")
+})
+
+test_that("objects that are not random forests give a clear error", {
+  fit <- stats::lm(Sepal.Length ~ ., data = iris)
+  expect_error(ggplotModel(fit), "'randomForest' object, not 'lm'")
+  expect_error(ggMeanDecreaseGini(fit), "'randomForest' object")
+  expect_error(ggMeanDecreaseAccuracy(fit), "'randomForest' object")
+})

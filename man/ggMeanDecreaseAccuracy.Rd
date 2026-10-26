@@ -3,17 +3,21 @@
 \name{ggMeanDecreaseAccuracy}
 \alias{ggMeanDecreaseAccuracy}
 \alias{ggMeanDecreaseAccuracy.randomForest}
+\alias{ggMeanDecreaseAccuracy.default}
 \title{ggplot Mean Decrease Accuracy}
 \usage{
 ggMeanDecreaseAccuracy(model, num, ...)
 
 \method{ggMeanDecreaseAccuracy}{randomForest}(model, num = 25, ...)
+
+\method{ggMeanDecreaseAccuracy}{default}(model, num = 25, ...)
 }
 \arguments{
 \item{model}{An object of class \code{randomForest}, fitted with
 \code{importance = TRUE} (for example \code{train(...)$finalModel} from 'caret').}
 
-\item{num}{An integer with the numbers of features to plot.}
+\item{num}{A positive whole number: how many of the most important
+features to plot. If the model has fewer, all of them are plotted.}
 
 \item{...}{Other arguments, currently unused.}
 }
@@ -25,6 +29,12 @@ decreasing order. It is an error if the model was fitted without
 \description{
 Bar chart of the features of a random forest ordered by their mean
 decrease in accuracy.
+}
+\details{
+The mean decrease in accuracy is the loss of out-of-bag accuracy when
+the values of a feature are permuted. It can be negative, and it is not
+the same measure as the mean decrease in Gini index
+(\code{\link[=ggMeanDecreaseGini]{ggMeanDecreaseGini()}}). Neither of them is a measure of causal effect.
 }
 \examples{
 \dontshow{if (requireNamespace("randomForest", quietly = TRUE)) withAutoprint(\{ # examplesIf}

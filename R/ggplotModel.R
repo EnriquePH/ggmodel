@@ -65,3 +65,9 @@ ggplotModel.randomForest <- function(model, ...) {
     ggplot2::ylab("") +
     ggplot2::theme_minimal()
 }
+
+#' @rdname ggplotModel
+#' @export
+ggplotModel.default <- function(model, ...) {
+  not_random_forest(model)
+}

@@ -15,7 +15,8 @@ A \code{ggplot2} graphic object.
 }
 \description{
 Draws the confusion matrix as a heat map, with the counts in each cell
-and the accuracy and kappa in the title.
+and the accuracy (as a percentage) and Cohen's kappa (a coefficient
+without units) in the title.
 }
 \examples{
 \dontshow{if (requireNamespace("caret", quietly = TRUE) && requireNamespace("randomForest", quietly = TRUE)) withAutoprint(\{ # examplesIf}
